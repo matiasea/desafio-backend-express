@@ -37,4 +37,3 @@ app.get("/:pid", (req, res) => {
 const port = 8080
 app.listen(port, () => console.log(`servidor escuchando en el puerto ${port} `))
 
-//console.log(productsElectro)
