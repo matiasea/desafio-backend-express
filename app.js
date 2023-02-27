@@ -1,39 +1,46 @@
+import express from "express";
 import fs from "fs"
+import { ProductManager } from "./index.js";
+const productManager = new ProductManager("./Products.json");
 
-const data = fs.readFileSync("./Products.json")
-const productsJson = JSON.parse(data)
+//const data = fs.readFileSync("./Products.json")
+//const productsJson = JSON.parse(data)
 
-
-
-import express from "express"
 
 const app = express()
 app.use(express.urlencoded({extended:true}))
 
 
-app.get("/products", (req, res) => {
-    res.send(productsJson)
+app.get('/products', async (req, res)=> {
+    const allProducts = await productManager.getProduct();
+    res.send(allProducts)
+    
 })
 
-app.get("/products/:limit", (req, res) => {
+app.get("/products/:limit", async (req, res) => {
     const { limit } = req.params
-    const limitProduct = productsJson.slice (0, +limit);
+    const allProducts = await productManager.getProduct();
+
+    const limitProduct = allProducts.slice (0, +limit);
 
      res.send(limitProduct)
     
 })
  
 
-app.get("/:pid", (req, res) => {
+ app.get("/:pid", async (req, res) => {
    const { pid } = req.params   
-   const searchId = productsElectro.find( product => product.id === +pid)
+   const allProducts = await productManager.getProduct();
+   const searchId = allProducts.find( product => product.id === +pid)
     if(!searchId){
-        res.send({error: `usaurio con Id ${pid} no encontrado`});
+        res.send({error: `producto con Id ${pid} no encontrado`});
         return
     }
     res.send({searchId})
 
-})
+}) 
+
+
 const port = 8080
 app.listen(port, () => console.log(`servidor escuchando en el puerto ${port} `))
 

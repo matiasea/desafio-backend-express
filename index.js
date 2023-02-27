@@ -1,7 +1,7 @@
 import fs from "fs"
 const path = "./Products.json"
 
-class ProductManager {
+export class ProductManager {
     static id = 1
 
     constructor(){
@@ -81,7 +81,7 @@ class ProductManager {
 
 
 
-const heladera = { 
+/* const heladera = { 
     title: "Heladera Samgung",
     descripcion: "Acero Inox - 365 Lts",
     price: 259878,
@@ -204,4 +204,4 @@ const heladera = {
  
  }
  
- main();
+ main(); */
