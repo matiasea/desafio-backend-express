@@ -1,4 +1,4 @@
-import fs from "fs"
+/* import fs from "fs"
 const path = "./Products.json"
 
 export class ProductManager {
@@ -79,7 +79,7 @@ export class ProductManager {
 }
 
 
-
+ */
 
 /* const heladera = { 
     title: "Heladera Samgung",
