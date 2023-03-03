@@ -3,9 +3,10 @@ import * as fs from "fs"
 import { randomUUID } from "crypto";
 
 export class FileManager {
-    //static id = 1
+    //static idCart = 1
 
     constructor(path){
+
         this.path = path
     }    
     
@@ -82,21 +83,40 @@ export class FileManager {
     }
 
     async modify (id, data) {
-        const generic = await this.getById(id);
-        if(!generic){
+        const generic = await this.getAll();
+        const idFound = generic.find((product) => {
+            return product.id === id
+        });/*         if(!idFound){
             console.log("Product not found");
-            return;
-        }
+            return; 
+        }*/
         const allGeneric = await this.getAll();
-        const modifyGeneric = {...generic, ...data};
+        const modifyGeneric = {...idFound, ...data};
         const genericOut = allGeneric.filter(e => e.id !== id);
         const newModify = [...genericOut, modifyGeneric];
         const dataStr = JSON.stringify(newModify);
 
         await fs.promises.writeFile(this.path, dataStr);
-        
-
+        return id;
 
     }
+
+
+    
+
+    
+    
+    
+    
+    async addCart(generic){
+        //AGREGA PRODUCTOS AL ARRAY
+        const genericOk = await this.getAll();
+        const newGeneric = [...genericOk, {id, status: true, ...generic}];
+        const dataStr = JSON.stringify(newGeneric);
+
+        await fs.promises.writeFile(this.path, dataStr);
+        return id;
+    }
+
 
 }
