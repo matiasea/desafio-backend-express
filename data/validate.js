@@ -1,4 +1,4 @@
-const productKeys = ["title", "description", "code", "price", "stock", "category", "thumbnails"]
+const productKeys = ["title", "description", "code", "price", "stock", "category"]
 
 export function validateProduct (okProduct){
     const okProductKeys = Object.keys(okProduct);

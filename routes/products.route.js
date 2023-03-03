@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { FileManager } from "../data/db.js";
 import { validateProduct } from "../data/validate.js";
+import { uploader } from "../utils/uploader.js";
 
 const productManager = new FileManager("./data/products.json")
 const route = Router();
@@ -27,28 +28,20 @@ route.get("/:pid", async (req, res) => {
  
  }) 
  
- route.post("/", async (req, res) => {
+ route.post("/", uploader.single("file") , async (req, res) => {
     const product = req.body;
+    const file = req.file?.path;
     const isValid = validateProduct(product);
     if(!isValid){
         res.status(400).send({error: "datos invalidos"});
         return
-
     }
-    const id = await productManager.add(product)
+    const id = await productManager.add({...product, status: true, thumbnail: file})
     res.status(201).send({id});
-    
-    /* const mesa = { title: "Mesa Gardenlife", 
-        descripcion: "Redonda, plastica",
-        price: 14520,
-        thumbnail: "iimgmesa.com",
-        code: "GUINEA",
-        stock: 4,
-        //id: productManager.id++
-     } */
 
-    //res.send (await productManager.add(mesa))
  })
+
+
 
  route.put("/:pid", async (req, res) => {
     const pid = req.params.pid; 
