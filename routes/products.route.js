@@ -5,9 +5,6 @@ import { uploader } from "../utils/uploader.js";
 
 const productManager = new FileManager("./data/products.json")
 const route = Router();
-/* const app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended:true})); */
 
 route.get('/', async (req, res)=> {
     const allProducts = await productManager.getAll();
@@ -20,17 +17,14 @@ route.get("/:pid", async (req, res) => {
     const pid = req.params.pid; 
     const product = await productManager.getAll();
     const searchId = product.find( product => product.id == pid)
-     if(!searchId){
-         res.status(404).send({error: `producto con Id ${pid} no encontrado`});
-         return;
-     }
-     res.send({searchId})
+    res.send({searchId})
  
  }) 
  
  route.post("/", uploader.single("file") , async (req, res) => {
-    const product = req.body;
     const file = req.file?.path;
+    console.log=(file);
+    const product = req.body;
     const isValid = validateProduct(product);
     if(!isValid){
         res.status(400).send({error: "datos invalidos"});
@@ -45,14 +39,8 @@ route.get("/:pid", async (req, res) => {
 
  route.put("/:pid", async (req, res) => {
     const pid = req.params.pid; 
-    const product = await productManager.getAll();
-    const searchId = product.find( product => product.id == pid)
-     if(!searchId){
-         res.status(404).send({error: `producto con Id ${pid} no encontrado`});
-         return;
-     }
-     const newData = req.body;
-     const isValid = validateProduct(newData);
+    newData = req.body;
+    const isValid = validateProduct(newData);
         if(!isValid){
         res.status(400).send({error: "datos invalidos",
     });
@@ -66,12 +54,6 @@ route.get("/:pid", async (req, res) => {
 
  route.delete("/:pid", async (req, res) => {
     const pid = req.params.pid; 
-    const product = await productManager.getAll();
-    const searchId = product.find( product => product.id == pid)
-     if(!searchId){
-         res.status(404).send({error: `producto con Id ${pid} no encontrado`});
-         return;
-     }
      await productManager.deleteProduct(pid);
     res.send({ok: true})
     }

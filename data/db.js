@@ -6,7 +6,6 @@ export class FileManager {
     //static idCart = 1
 
     constructor(path){
-
         this.path = path
     }    
     
@@ -34,18 +33,15 @@ export class FileManager {
 
     }
 
-    async getById(id){
-        //RECIBE UN ID, Y CHEKEA QUE ESTE EN EL ARRAY, SI LO ENCUNTRA LO DEVUELVE POR CONSOLA
+    /* async getById(id){
             const allGeneric = await this.getAll();
-            //console.log(products)
             const idFound = allGeneric.find(search => (search.id === id));
-            if (idFound) {
-                return console.log(idFound)            
-            } else {
-                console.error("El producto no existe")                
-            }
-               
-    }
+            if (!idFound) {
+                res.status(404).send({error: `producto con Id ${pid} no encontrado`});
+            return;          
+            } 
+            console.log(idFound)
+    } */
 
     async updateProduct (id, prop, newValue){
         //PERMITE EDITAR INFORMACION DE LOS PRODUCTOS POR MEDIO DEL ID DEL PRODUCTO A ACTUALIZAR
@@ -67,16 +63,10 @@ export class FileManager {
         //ELIMINA UN PRODUCTO DEL ARRAY 
         const allGeneric = await this.getAll();
         const genericOut = allGeneric.filter(e => e.id !== id);
-        /* const idFound = allGeneric.filter(function(product){
-            return product.id != id
-        }) */
-      /*   
-        if(products.length === idFound.length){
-            console.log("no se encontro id Producto")
-        } else {
-            console.log(idFound)
-
-        } */
+            if(allGeneric.length === genericOut.length){
+            res.status(404).send({error: `producto con Id ${id} no encontrado`});
+         return;
+        } 
         const dataStr = JSON.stringify(genericOut);
 
         await fs.promises.writeFile(this.path, dataStr)
@@ -85,12 +75,13 @@ export class FileManager {
     async modify (id, data) {
         const generic = await this.getAll();
         const idFound = generic.find((product) => {
-            return product.id === id
-        });/*         if(!idFound){
-            console.log("Product not found");
-            return; 
-        }*/
-        const allGeneric = await this.getAll();
+            return product.id == id
+        });
+        if(!idFound){
+            res.status(404).send({error: `producto con Id ${id} no encontrado`});
+            return;
+        }
+        ///*  */const allGeneric = await this.getAll();
         const modifyGeneric = {...idFound, ...data};
         const genericOut = allGeneric.filter(e => e.id !== id);
         const newModify = [...genericOut, modifyGeneric];
@@ -100,13 +91,6 @@ export class FileManager {
         return id;
 
     }
-
-
-    
-
-    
-    
-    
     
     async addCart(generic){
         //AGREGA PRODUCTOS AL ARRAY

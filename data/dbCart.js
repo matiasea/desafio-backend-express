@@ -1,11 +1,10 @@
 import * as fs from "fs"
+import { randomUUID } from "crypto";
 //const path = "./cart.json"
 
 export class Cart {
     static id = 1;
-    
     constructor(path){
-
         this.path = path
     }
 
@@ -21,15 +20,16 @@ export class Cart {
         }
     }
 
-    async addCart(generic){
+    async addCart(){
         //AGREGA UN NUEVO CARRITO
-        //const id = randomUUID()
+        const id = randomUUID()
+        const productCart = [];
         const genericOk = await this.getAllCarts();
-        const newGeneric = [...genericOk, {id: Cart.id++, ...generic}];
+        const newGeneric = [...genericOk, [id, productCart]];
         const dataStr = JSON.stringify(newGeneric);
 
         await fs.promises.writeFile(this.path, dataStr);
-        /* return id; */
+         return id; 
     }
     
 
