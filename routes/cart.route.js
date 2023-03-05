@@ -40,16 +40,17 @@ route.post("/" , async (req, res) => {
     console.log(searchIdCart)
     if(!searchIdCart){
         res.status(404).send({error: `Carrito con Id ${cid} no encontrado`});
-        return;
+       
     }
     const allProducts = await productManager.getAll();
-    const searchIdProduct = allProducts.find( product => product.id == pid);
-    console.log(searchIdProduct)
+    console.log(allProducts);
+    const searchIdProduct = allProducts.find(product => product.id == pid);
+    console.log({searchIdProduct} )
     if(!searchIdProduct){
         res.status(404).send({error: `Producto con Id ${pid} no encontrado`});
         return;
     }
-    //searchIdCart.productsCart[{searchIdCart}];
+    searchIdCart.productCart.push(searchIdProduct)
    
 
  })

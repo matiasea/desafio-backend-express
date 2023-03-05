@@ -25,7 +25,7 @@ export class Cart {
         const id = randomUUID()
         const productCart = [];
         const genericOk = await this.getAllCarts();
-        const newGeneric = [...genericOk, [id, productCart]];
+        const newGeneric = [...genericOk,{id, productCart}];
         const dataStr = JSON.stringify(newGeneric);
 
         await fs.promises.writeFile(this.path, dataStr);
