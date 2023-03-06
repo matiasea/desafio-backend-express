@@ -20,14 +20,13 @@ export class Cart {
         }
     }
 
-    async addCart(){
+    async addCart(generic){
         //AGREGA UN NUEVO CARRITO
         const id = randomUUID()
-        const productCart = [];
+       // const productCart = [];
         const genericOk = await this.getAllCarts();
-        const newGeneric = [...genericOk,{id, productCart}];
+        const newGeneric = [...genericOk,{id, ...generic}];
         const dataStr = JSON.stringify(newGeneric);
-
         await fs.promises.writeFile(this.path, dataStr);
          return id; 
     }
@@ -51,7 +50,25 @@ export class Cart {
             return product.id === id
         })
 
-        
+    }
+
+    async modify (id, data) {
+        const generic = await this.getAllCarts();
+        const idFound = generic.find((product) => {
+            return product.id == id
+        });
+        if(!idFound){
+            res.status(404).send({error: `producto con Id ${id} no encontrado`});
+            return;
+        }
+        ///*  */const allGeneric = await this.getAll();
+        const modifyGeneric = {...idFound, ...data};
+        const genericOut = generic.filter(e => e.id !== id);
+        const newModify = [...genericOut, modifyGeneric];
+        const dataStr = JSON.stringify(newModify, null, 2);
+
+        await fs.promises.writeFile(this.path, dataStr);
+        return id;
 
     }
 }

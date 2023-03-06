@@ -17,7 +17,7 @@ route.get('/', async (req, res)=> {
 
 route.post("/" , async (req, res) => {
     //const productsCart = []
-    const id = await carts.addCart();
+    const id = await carts.addCart({"products": []});
     res.status(201).send({id});
 
  })
@@ -33,7 +33,7 @@ route.post("/" , async (req, res) => {
  })
 
 
-    route.post('/:cid/product/:pid', async (req, res) => {
+ route.post('/:cid/product/:pid', async (req, res) => {
         const {cid, pid} = req.params;
         const allCarts = await carts.getAllCarts();
         const cartFound = allCarts.find(cart => cart.id == cid);
@@ -48,17 +48,21 @@ route.post("/" , async (req, res) => {
             return
         }
     
-        const productInCart = cartFound.productCart.filter(productCart =>productCart.productCart == pid)
-        const productOutCart = cartFound.productCart.filter(productCart =>productCart.productCart != pid)
+         const productInCart = cartFound.products.filter(product =>product.product == pid)
+        const productOutCart = cartFound.products.filter(product =>product.product != pid)
         let quantityUpdate = 1;
         if (productInCart.length > 0){
             const {quantity} = productInCart[0];
             quantityUpdate = quantity +1;
         }
-    
+     
         const newProduct = {"product": pid, "quantity": quantityUpdate}
         const products = { productCart: [...productOutCart, newProduct]}
-        await productManager.update(cid, products);
+        //await productManager.update(cid, products); 
+        
+        //const newCart = cartFound.products.push(productFound)
+
+        await carts.modify(cid, products)
         
         res.status(200).send({ok: true});
     });

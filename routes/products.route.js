@@ -7,8 +7,16 @@ const productManager = new FileManager("./data/products.json")
 const route = Router();
 
 route.get('/', async (req, res)=> {
+    const {limit} = req.query;
     const allProducts = await productManager.getAll();
+    if (!limit){
+        res.send(allProducts)
     res.send(allProducts)
+}
+else{
+    const limitProduct = allProducts.slice(0,limit)
+    res.send(limitProduct)
+}
     
 })
 
@@ -21,16 +29,16 @@ route.get("/:pid", async (req, res) => {
  
  }) 
  
- route.post("/", uploader.single("file") , async (req, res) => {
-    const file = req.file?.path;
-    console.log=(file);
+ route.post("/", uploader.array("files") , async (req, res) => {
+    const files = req.files?.path;
+    //console.log=(files);
     const product = req.body;
     const isValid = validateProduct(product);
     if(!isValid){
         res.status(400).send({error: "datos invalidos"});
         return
     }
-    const id = await productManager.add({...product, status: true, thumbnail: file})
+    const id = await productManager.add({...product, status: true, thumbnail: files})
     res.status(201).send({id});
 
  })
@@ -46,7 +54,6 @@ route.get("/:pid", async (req, res) => {
     });
         return;
     }
-     
      await productManager.modify(pid, newData);
      res.send({ok: true})
 

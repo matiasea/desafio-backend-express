@@ -43,22 +43,7 @@ export class FileManager {
             return idFound;
     }
 
- /*    async updateProduct (id, prop, newValue){
-        //PERMITE EDITAR INFORMACION DE LOS PRODUCTOS POR MEDIO DEL ID DEL PRODUCTO A ACTUALIZAR
-        const allGeneric = await this.getAll();
-        const idFound = allGeneric.find((product) => {
-            return product.id === id
-        })
-        if (idFound) {
-            idFound[prop] = newValue
-            //console.log(idFound)
-            const dataStr = JSON.stringify(idFound)
-            fs.promises.writeFile(this.path, dataStr)            
-        } else{
-            console.log("El id no se encuentra")  
-        }   
-    } */
-
+ 
     async update(id, data) {
         const generic = await this.getById(id);
         if (!entidadCargada) {
@@ -109,15 +94,6 @@ export class FileManager {
 
     }
     
-    async addCart(generic){
-        //AGREGA PRODUCTOS AL ARRAY
-        const genericOk = await this.getAll();
-        const newGeneric = [...genericOk, {id, status: true, ...generic}];
-        const dataStr = JSON.stringify(newGeneric);
-
-        await fs.promises.writeFile(this.path, dataStr);
-        return id;
-    }
 
 
 }
