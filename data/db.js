@@ -33,17 +33,17 @@ export class FileManager {
 
     }
 
-    /* async getById(id){
+    async getById(id){
             const allGeneric = await this.getAll();
-            const idFound = allGeneric.find(search => (search.id === id));
-            if (!idFound) {
+            const idFound = allGeneric.find((search) => search.id === id);
+           /*  if (!idFound) {
                 res.status(404).send({error: `producto con Id ${pid} no encontrado`});
             return;          
-            } 
-            console.log(idFound)
-    } */
+            }  */
+            return idFound;
+    }
 
-    async updateProduct (id, prop, newValue){
+ /*    async updateProduct (id, prop, newValue){
         //PERMITE EDITAR INFORMACION DE LOS PRODUCTOS POR MEDIO DEL ID DEL PRODUCTO A ACTUALIZAR
         const allGeneric = await this.getAll();
         const idFound = allGeneric.find((product) => {
@@ -57,7 +57,24 @@ export class FileManager {
         } else{
             console.log("El id no se encuentra")  
         }   
-    }
+    } */
+
+    async update(id, data) {
+        const generic = await this.getById(id);
+        if (!entidadCargada) {
+          throw new Error('Entidad no encontrada');
+        }
+        const allGeneric = await this.getAll();
+        const genericModify = { ...entidadCargada, ...data };
+        const genericOut = allGeneric.filter((e) => e.id !== id);
+        const newGeneric = [...genericOut, genericModify];
+        const dataStr = JSON.stringify(newGeneric, null, 2);
+        await fs.promises.writeFile(this.path, dataStr);
+      }
+
+
+
+
 
     async deleteProduct(id){
         //ELIMINA UN PRODUCTO DEL ARRAY 
